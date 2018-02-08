@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Classes\External\Scraper;
 use App\Classes\Front\City;
 use App\Classes\Front\Company;
 use App\Classes\Front\Country;
@@ -12,7 +13,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use GuzzleHttp\Client;
-use projectivemotion\WizzairScraper\Scraper;
 
 class TicketsController extends Controller
 {
