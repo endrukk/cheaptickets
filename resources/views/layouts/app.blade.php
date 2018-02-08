@@ -10,10 +10,48 @@
 
     <title>{{ config('app.name', 'Cheap tickets') }}</title>
 
-    <!-- Styles -->
+    {{--styles--}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{--/styles--}}
+
+    {{--JS--}}
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="javascript" src="{{ asset('js/front/global.js') }}"></script>
+    {{--/JS--}}
+
+    {{--fb ligin init script--}}
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId            : '324314601412661',
+                autoLogAppEvents : true,
+                xfbml            : true,
+                version          : 'v2.12'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    {{--/fb ligin init script--}}
+    {{--/JS--}}
 </head>
 <body>
+    {{--include FB SDK--}}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.12&appId=324314601412661&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+    {{--/include FB SDK--}}
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">

@@ -26,6 +26,12 @@
                     <div class="col-md-3 col-sm-6">
                         <a href="{{route('apply-tickets')}}" class="btn btn-primary btn-lg">Apply cheap tickets</a>
                     </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{route('generate-ryanair')}}" class="btn btn-success btn-lg">Sync Ryanair</a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <a href="{{route('generate-wizzair')}}" class="btn btn-success btn-lg">Sync Wizzair</a>
+                    </div>
                 </div>
             </div>
         </div>

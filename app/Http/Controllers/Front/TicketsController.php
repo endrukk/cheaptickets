@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use GuzzleHttp\Client;
+use projectivemotion\WizzairScraper\Scraper;
 
 class TicketsController extends Controller
 {
@@ -136,51 +137,36 @@ class TicketsController extends Controller
     }
 
     public function generateWizzair(Request $request){
-        $request =[
-            'departureStation' => 'BUD',
-            'destinationCategory' => 0,
-            'dateRange' => 0,
-            'from' => null,
-            'to' => null,
-            'travelDuration' => 2,
-            'priceRange' => 0
-        ];
-        $headers =[
-            ':authority' => 'be.wizzair.com',
-            ':referer' => 'https://wizzair.com/hu-hu/jaratok/utazastervezo',
-            ':method' => 'POST',
-            ':path' => '/7.8.6/Api/search/inspirationalFlights',
-            ':scheme' => 'https',
-            'accept' => 'application/json, text/plain, */*',
-            'accept-encoding' => 'gzip, deflate, br',
-            'accept-language' => 'hu-HU,hu;q=0.9,en-US;q=0.8,en;q=0.7',
-            'content-length' => '120',
-            'content-type' => 'application/json',
-        ];
-        $url = 'https://be.wizzair.com/7.8.6/Api/search/inspirationalFlights';
+        $origin = 'BUD';
+        $destination = 'OPO';
+        $departure_date = '2018-02-10';
+        $return_date = '2018-03-20';
 
-        echo '<pre>';
+        $wizzair = new Scraper();
+        $wizzair->cacheOff();
+        $wizzair->verboseOff();
 
-        $client = new Client();
+        $wizzair->setAdults(1);
+        $wizzair->setCookieFileName(tempnam(sys_get_temp_dir(), 'wizzaircookie.'));
 
-        $client = $client->post($url, [
-            RequestOptions::HEADERS => $headers,
-            RequestOptions::JSON => $request
-        ]);
-        die(var_dump(
-           $client->
-        ));
+        $api_detected = $wizzair->detect_api_version();
+        if($api_detected)
+            echo "Detected api version: {$wizzair->getApiVersion()}\n";
 
+        $wizzair->setDepartureDate($departure_date);
+        $wizzair->setReturnDate($return_date);
 
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, ($request));
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
-        curl_close($curl);
+        try {
+            $flights = $wizzair->getTrips();
+            echo json_encode($flights, JSON_PRETTY_PRINT);
+        }catch(\Exception $e)
+        {
+            echo "An Error ocurred: ", $e->getMessage(), ". You may want to try changing search parameters.";
+            echo "\nConnection Info: ";
+            var_export($wizzair->getInfo());
+            exit(1);
+        }
 
-//execute post
-        print $response;
     }
 
     public function getCity($city){
