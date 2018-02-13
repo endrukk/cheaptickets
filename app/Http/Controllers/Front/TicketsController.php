@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Classes\External\Scraper;
+use App\Classes\Front\Airport;
 use App\Classes\Front\City;
 use App\Classes\Front\Company;
 use App\Classes\Front\Country;
@@ -86,7 +87,7 @@ class TicketsController extends Controller
             'durationTo' => '07',
             'inboundDepartureDateFrom' => date('Y-m-d'),
             'inboundDepartureDateTo' => date('Y-m-d', strtotime("+3 month")),
-            'language' => 'hu',
+            'language' => 'en',
             'limit' => '999',
             'market' => 'hu-hu',
             'offset' => '0',
@@ -99,12 +100,11 @@ class TicketsController extends Controller
 
         foreach ($this->ryanairResult->fares as $fare) {
 
-            $flight = new Flight;
-            $flight->id_departure = $this->getCity($fare->outbound->departureAirport->name);
-            $flight->id_departure_country = $this->getCountry($fare->outbound->departureAirport->countryName);
 
-            $flight->id_destination = $this->getCity($fare->outbound->arrivalAirport->name);
-            $flight->id_destination_country = $this->getCountry($fare->outbound->arrivalAirport->countryName);
+            $flight = new Flight;
+            $flight->id_from = $this->getAirport($fare->outbound->departureAirport->iataCode);
+
+            $flight->id_to = $this->getAirport($fare->outbound->arrivalAirport->iataCode);
 
             $flight->price = $fare->outbound->price->value + $fare->inbound->price->value;
             $flight->date = date("Y-m-d H:i:s", strtotime($fare->outbound->departureDate));
@@ -118,8 +118,8 @@ class TicketsController extends Controller
 
             $flight->id_company = $this->getCompany('Ryanair');
 
-            if (!Flight::where('id_departure', '=', $flight->id_departure)
-                ->where('id_destination', '=', $flight->id_destination)
+            if (!Flight::where('id_from', '=', $flight->id_from)
+                ->where('id_to', '=', $flight->id_to)
                 ->where('date', '=', $flight->date)
                 ->where('length', '=', $flight->length)
                 ->where('id_company', '=', $flight->id_company)
@@ -158,7 +158,48 @@ class TicketsController extends Controller
 
         try {
             $flights = $wizzair->getTrips();
-            echo json_encode($flights, JSON_PRETTY_PRINT);
+
+
+            foreach ($flights['inspirationalFlights'] as $fare){
+                $flight = new Flight;
+                $flight->id_from = $this->getAirport($fare['departureStation']);
+
+                $flight->id_to = $this->getAirport($fare['arrivalStation']);
+
+                $flight->price = $fare['returnPrice'] + $fare['price'];
+                $flight->date = date("Y-m-d H:i:s", strtotime($fare['departureDate']));
+
+                /*find difference between go there and come back ==> it's in secconds so convert to days*/
+                $flight->length = intval(
+                    (strtotime($fare['returnDepartureDate'])
+                        - strtotime($fare['departureDate']))
+                    / (60 * 60 * 24)
+                );
+
+                $flight->id_company = $this->getCompany('Wizzair');
+
+                if (!Flight::where('id_from', '=', $flight->id_from)
+                    ->where('id_to', '=', $flight->id_to)
+                    ->where('date', '=', $flight->date)
+                    ->where('length', '=', $flight->length)
+                    ->where('id_company', '=', $flight->id_company)
+                    ->first()
+                ) {
+                    $flight->save();
+                }
+            }
+//            echo '<pre />';
+//            var_dump(
+//                $flights
+////                json_decode(
+////                    json_encode($flights, JSON_PRETTY_PRINT)
+////                )
+//            );
+
+            $request->session()->put('app_message', 'Wizzair Synced!');
+            $request->session()->put('app_message_type', 'success');
+
+            return redirect()->route('home');
         }catch(\Exception $e)
         {
             echo "An Error ocurred: ", $e->getMessage(), ". You may want to try changing search parameters.";
@@ -194,6 +235,10 @@ class TicketsController extends Controller
             $insert->save();
         }
         return Company::where('name', $company)->first()->id;
+    }
+
+    public function getAirport($airport){
+        return Airport::where('code', $airport)->first()->id;
     }
 
 }

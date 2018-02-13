@@ -21,3 +21,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/apply-tickets', 'Front\TicketsController@applyCheap')->name('apply-tickets');
 Route::get('/generate-ryanair', 'Front\TicketsController@generateRyanair')->name('generate-ryanair');
 Route::get('/generate-wizzair', 'Front\TicketsController@generateWizzair')->name('generate-wizzair');
+Route::get('/test', 'Front\TestsController@index')->name('test');
