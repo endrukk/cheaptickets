@@ -13,5 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Airport extends Model
 {
-
+    public static function getAirport($airport){
+        return Airport::where('code', $airport)->first()->id;
+    }
 }

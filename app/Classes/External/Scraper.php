@@ -161,7 +161,7 @@ class Scraper extends CacheScraper
 
         return $result;
     }
-    public function makeSearchRequest()
+    public function makeSearchRequest($priceRange)
     {
         $params =
             [
@@ -169,7 +169,7 @@ class Scraper extends CacheScraper
                 'departureStation' => "BUD",
                 'destinationCategory' => 0,
                 'from' => null,
-                'priceRange' => 1,
+                'priceRange' => $priceRange,
                 'to' => null,
                 'travelDuration' => 1,
             ];
@@ -203,11 +203,16 @@ class Scraper extends CacheScraper
         return $html_source;
     }
 
-    public function getTrips()
+    /**
+     * var priceRange   from 1 to 6
+     *                  1 - cheapest flights
+     *                  6 - from cheapest to mst expensive
+     */
+    public function getTrips($priceRange = 1)
     {
         // initialize cookies.
         $home = $this->cache_get('/');
-        $html_source = $this->makeSearchRequest();
+        $html_source = $this->makeSearchRequest($priceRange);
 
         return $html_source;
     }

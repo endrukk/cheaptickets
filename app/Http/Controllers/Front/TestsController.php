@@ -29,24 +29,28 @@ class TestsController extends Controller
     public function index()
     {
 
-        $airports = DB::table('airports')->get();;
-        foreach ($airports as $port){
-            $city = DB::table('wsh_co_airports')
-                ->select('cityName')
-                ->where('code', '=', $port->code)
-                ->first();
-
-            $id_city = DB::table('cities')
-                ->select('id')
-                ->where('name', '=', $city->cityName)
-                ->first();
-
-            echo 'UPDATE `airports` SET `id_city`= ' . $id_city->id . ' WHERE  `id`= ' . $port->id . ';<br />';
-//var_dump($id_city);
-        }
-        die('<br />done');
-
+        echo date('Y-m-d', strtotime("2018-02-03"));
 
 
     }
+
+
+
+
+//$airports = DB::table('airports')->get();;
+//        foreach ($airports as $port){
+//            $city = DB::table('wsh_co_airports')
+//                ->select('cityName')
+//                ->where('code', '=', $port->code)
+//                ->first();
+//
+//            $id_city = DB::table('cities')
+//                ->select('id')
+//                ->where('name', '=', $city->cityName)
+//                ->first();
+//
+//            echo 'UPDATE `airports` SET `id_city`= ' . $id_city->id . ' WHERE  `id`= ' . $port->id . ';<br />';
+////var_dump($id_city);
+//        }
+//        die('<br />done');
 }

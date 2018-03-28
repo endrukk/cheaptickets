@@ -14,4 +14,13 @@ use Illuminate\Database\Eloquent\Model;
 class City extends Model
 {
 
+    public static function getCity($city){
+        if(!City::where('name', $city)->first()){
+            $insert = new City();
+            $insert->name = $city;
+            $insert->save();
+        }
+        return City::where('name', $city)->first()->id;
+    }
+
 }

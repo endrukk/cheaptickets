@@ -17,5 +17,11 @@
     "laravel-mix": "0.*",
     "lodash": "^4.17.4",
     "vue": "^2.1.10"
+  },
+  "dependencies": {
+    "cordova": "^8.0.0",
+    "global": "^4.3.2",
+    "ionic": "^3.19.1",
+    "phonegap": "^8.0.0"
   }
 }
