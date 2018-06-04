@@ -67,7 +67,7 @@ class TicketsController extends Controller
     public function ajaxFareFinder(Request $request){
 //        TODO: create here a flight checker:
 //        check the cheaoest available prices for this airport for ryanair and wizzair
-//        TODO extra: add easyjet scraper
+
     }
     public function ajaxAirportFinder(Request $request){
         $airport = $request->input('airport');

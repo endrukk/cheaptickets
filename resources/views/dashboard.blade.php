@@ -9,7 +9,8 @@
             </div>
             <div class="modal-body">
                 <div class="bd-example">
-                    <a href="{{route('apply-tickets')}}" class="btn btn-outline-primary btn-lg">Apply cheap tickets</a>
+                    {{--<a href="{{route('apply-tickets')}}" class="btn btn-outline-primary btn-lg">Apply cheap tickets</a>--}}
+                    <a href="{{route('my-cheap-tickets')}}" class="btn btn-outline-primary btn-lg">Apply cheap tickets</a>
                     <a href="{{route('generate-ryanair')}}" class="btn btn-outline-success btn-lg">Sync Ryanair</a>
                     <a href="{{route('generate-wizzair')}}" class="btn btn-outline-success btn-lg">Sync Wizzair</a>
                 </div>

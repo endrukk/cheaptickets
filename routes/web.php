@@ -16,6 +16,7 @@ Route::get('/', 'HomeController@index')->name('index');
 Auth::routes();
 
 Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+Route::get('/dashboard/my-cheap-tickets', 'Admin\UserTicketController@dashboard')->name('my-cheap-tickets');
 
 Route::get('/apply-tickets', 'Front\TicketsController@applyCheap')->name('apply-tickets');
 Route::get('/generate-ryanair', 'Front\TicketsController@generateRyanair')->name('generate-ryanair');
@@ -29,6 +30,7 @@ Route::get('/generate-wizzair', 'Front\TicketsController@generateWizzair')->name
 Route::get('/ajax/fligths/ganarate', 'Front\AjaxTicketsController@ajaxFlightGeneration')->name('ajax-fligths-generation');
 Route::post('/ajax/tickets/fare-finder', 'Front\TicketsController@ajaxFareFinder')->name('ajax-fare-finder');
 Route::post('/ajax/tickets/airport-finder', 'Front\TicketsController@ajaxAirportFinder')->name('ajax-airport-finder');
+Route::post('/ajax/my-cheap-tickets/add-cheap-ticket', 'Admin\UserTicketController@create')->name('add-cheap-ticket');
 /*/Ajax*/
 
 

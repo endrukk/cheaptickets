@@ -2,15 +2,17 @@
  * Created by endre on 2018. 02. 06..
  */
 $(document).ready(function () {
-    $('#ajaxSearchFlights').on('click',function (e) {
+    $('#ajaxSearchFlights,#ajaxAddCheapTicket').on('click',function (e) {
         e.preventDefault();
+        var form = $(this).closest('form');
         //todo: Ajax form submit, in laravel we need a token to submit the form
         $.ajax({
-            url: '/ajax/tickets/fare-finder',
+            url: form.attr('action'),
             dataType: 'text/json',
             type: 'POST',
             data: {
-                format: 'json'
+                format: 'json',
+                data: form.serializeArray()
             },
             error: function() {
                console.log('error');
@@ -21,7 +23,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#filghtsArrival').on('input',function () {
+    $('#filghtsArrival, #flightsDeparture').on('input',function () {
         searchAirports($(this));
     });
 
@@ -30,8 +32,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click','.destination-result',function () {
-        $('#filghtsArrival').val($(this).attr('data-dest-airport'));
-        $('#destinationID').val($(this).attr('data-dest-code'));
+        if($(this).parent().prev('input[type=text]')[0] == $('#filghtsArrival')[0]){
+            $('#filghtsArrival').val($(this).attr('data-dest-airport'));
+            $('#destinationID').val($(this).attr('data-dest-code'));
+        }else if($(this).parent().prev('input[type=text]')[0] == $('#flightsDeparture')[0]){
+            $('#flightsDeparture').val($(this).attr('data-dest-airport'));
+            $('#deartureID').val($(this).attr('data-dest-code'));
+        }
         $('.ajax-select').hide();
     });
 
@@ -79,7 +86,6 @@ function searchAirports(element){
 }
 
 function searchFlights(){
-    e.preventDefault();
     var destinationCode = $('#destinationID').val();
     var token = $('#fareFinderForm').find('input[name="_token"]').val();
     $.ajaxSetup({

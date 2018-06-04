@@ -1,10 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Classes\Admin\UserTicket;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class UserTicketController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -16,39 +21,25 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function dashboard()
     {
 
-        $data['flightsTableData'] = $this->displayFlightsTable(true);
-        $data['flightsTableHeaders'] = false;
-        if(isset($data['flightsTableData'][0])){
-            $row = get_object_vars($data['flightsTableData'][0]);
-            foreach ($row as $key => $value){
-                $data['flightsTableHeaders'][] = $key;
-            }
-        }
-//        die(var_dump($data['flightsTableData']));
-        return view('dashboard',$data);
+        $userTicket = new UserTicket(Auth::user()->id);
+
+        $data['myCheapFlights'] = $userTicket->getTickets();
+
+
+        return view('layouts/admin/my_cheap_flights', $data);
     }
 
-    /**
-     * Show the application home page.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function create(Request $request)
     {
-        $data = array(
-            'flightsTableData' => $this->displayFlightsTable(true),
-        );
-
-        return view('home',$data);
+        echo '<pre>';
+        $formData = ($request->input('data'));
+        die(var_dump($formData));
     }
+
+
 
     private function displayFlightsTable($today = false)
     {
