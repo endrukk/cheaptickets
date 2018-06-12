@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 class Wizzair
 {
 
+    private $settings = array();
+
 
     public function _construct()
     {
@@ -40,7 +42,7 @@ class Wizzair
         $wizzair->setReturnDate($return_date);
 
         try {
-            $flights = $wizzair->getTrips(6);
+            $flights = $wizzair->getTrips($this->settings,6);
 
             foreach ($flights['inspirationalFlights'] as $fare){
                 $flight = new Flight;
@@ -83,4 +85,22 @@ class Wizzair
         }
 
     }
+
+    /**
+     * @return array
+     */
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param array $settings
+     */
+    public function setSettings(array $settings)
+    {
+        $this->settings = $settings;
+    }
+
+
 }

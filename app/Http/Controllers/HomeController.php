@@ -50,7 +50,7 @@ class HomeController extends Controller
         return view('home',$data);
     }
 
-    private function displayFlightsTable($today = false)
+    public static function displayFlightsTable($today = false)
     {
 
         $sql = "select 

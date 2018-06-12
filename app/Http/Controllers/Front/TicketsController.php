@@ -63,12 +63,6 @@ class TicketsController extends Controller
         return redirect()->route('dashboard');
     }
 
-
-    public function ajaxFareFinder(Request $request){
-//        TODO: create here a flight checker:
-//        check the cheaoest available prices for this airport for ryanair and wizzair
-
-    }
     public function ajaxAirportFinder(Request $request){
         $airport = $request->input('airport');
         $airports = DB::table('airports AS a')

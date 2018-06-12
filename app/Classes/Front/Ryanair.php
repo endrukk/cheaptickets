@@ -58,20 +58,22 @@ class Ryanair
     public function generateCheap()
     {
 
-        $this->setSettings(array(
-            'departureAirportIataCode' => 'BUD',
-            'durationFrom' => '03',
-            'durationTo' => '07',
-            'inboundDepartureDateFrom' => date('Y-m-d'),
-            'inboundDepartureDateTo' => date('Y-m-d', strtotime("+3 month")),
-            'language' => 'hu',
-            'limit' => '999',
-            'market' => 'hu-hu',
-            'offset' => '0',
-            'outboundDepartureDateFrom' => date('Y-m-d'),
-            'outboundDepartureDateTo' => date('Y-m-d', strtotime("+3 month")),
-            'priceValueTo' => '999999',
-        ));
+        if($this->settings === array()){
+            $this->setSettings(array(
+                'departureAirportIataCode' => 'BUD',
+                'durationFrom' => '03',
+                'durationTo' => '07',
+                'inboundDepartureDateFrom' => date('Y-m-d'),
+                'inboundDepartureDateTo' => date('Y-m-d', strtotime("+3 month")),
+                'language' => 'hu',
+                'limit' => '999',
+                'market' => 'hu-hu',
+                'offset' => '0',
+                'outboundDepartureDateFrom' => date('Y-m-d'),
+                'outboundDepartureDateTo' => date('Y-m-d', strtotime("+3 month")),
+                'priceValueTo' => '999999',
+            ));
+        }
 
         $this->result = json_decode(file_get_contents($this->api . $this->serialize()));
 

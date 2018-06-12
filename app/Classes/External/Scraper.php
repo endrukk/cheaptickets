@@ -161,18 +161,23 @@ class Scraper extends CacheScraper
 
         return $result;
     }
-    public function makeSearchRequest($priceRange)
+    public function makeSearchRequest($settings, $priceRange)
     {
-        $params =
-            [
-                'dateRange' => 1,
-                'departureStation' => "BUD",
-                'destinationCategory' => 0,
-                'from' => null,
-                'priceRange' => $priceRange,
-                'to' => null,
-                'travelDuration' => 1,
-            ];
+        if($settings === array()){
+            $params =
+                [
+                    'dateRange' => 1,
+                    'departureStation' => "BUD",
+                    'destinationCategory' => 0,
+                    'from' => null,
+                    'priceRange' => $priceRange,
+                    'to' => null,
+                    'travelDuration' => 1,
+                ];
+
+        } else {
+            $params = $settings;
+        }
 
         $array_source    =   $this->cache_get('/' . $this->getApiVersion() . '/Api/search/inspirationalFlights', json_encode($params) , true );
         $result =   json_decode($array_source , true);
@@ -208,11 +213,11 @@ class Scraper extends CacheScraper
      *                  1 - cheapest flights
      *                  6 - from cheapest to mst expensive
      */
-    public function getTrips($priceRange = 1)
+    public function getTrips($settings = array(), $priceRange = 1)
     {
         // initialize cookies.
         $home = $this->cache_get('/');
-        $html_source = $this->makeSearchRequest($priceRange);
+        $html_source = $this->makeSearchRequest($settings,$priceRange);
 
         return $html_source;
     }

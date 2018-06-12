@@ -25,7 +25,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">From </span>
                                         </div>
-                                        <input value="Ferihegy Arpt - Budapest" type="text" name="departure" class="form-control" placeholder="the airport you departure" aria-label="Departure" aria-describedby="basic-addon1" readonly>
+                                        <input type="text" name="departure" id="flightsDeparture" data-target="#departureCode" class="form-control" placeholder="the airport you departure" aria-label="Departure" aria-describedby="basic-addon1">
                                         <div class="ajax-select">
 
                                         </div>
@@ -37,7 +37,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">To </span>
                                         </div>
-                                        <input type="text" name="arrival" id="filghtsArrival" class="form-control" placeholder="the airport you wish to arrive" aria-label="Arrive" aria-describedby="basic-addon1">
+                                        <input type="text" name="arrival" id="filghtsArrival"  data-target="#destinationCode" class="form-control" placeholder="the airport you wish to arrive" aria-label="Arrive" aria-describedby="basic-addon1">
                                         <div class="ajax-select">
 
                                         </div>
@@ -48,7 +48,8 @@
 
                                 </div>
                             </div>
-                            <input type="hidden" id="destinationID" name="destination_id" value=""/>
+                            <input type="hidden" id="departureCode" name="departure_code" value=""/>
+                            <input type="hidden" id="destinationCode" name="destination_code" value=""/>
                         </form>
 
 
@@ -61,7 +62,7 @@
                 </div>
                 <div class="modal-body">
                     @if( $flightsTableData )
-                        <table class="table table-striped table-dark table-responsive">
+                        <table class="table table-striped table-dark table-responsive" id="flightsTable">
                             <thead>
                             <tr>
                                 <th colspan="3" scope="col">From</th>

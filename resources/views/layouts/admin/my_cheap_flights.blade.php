@@ -48,8 +48,8 @@
 
                                 </div>
                             </div>
-                            <input type="hidden" id="destinationID" name="destination_id" value=""/>
-                            <input type="hidden" id="deartureID" name="dearture_id" value=""/>
+                            <input type="hidden" id="destinationCode" name="destination_code" value=""/>
+                            <input type="hidden" id="departureCode" name="departure_code" value=""/>
                         </form>
 
 

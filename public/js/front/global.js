@@ -4,40 +4,20 @@
 $(document).ready(function () {
     $('#ajaxSearchFlights,#ajaxAddCheapTicket').on('click',function (e) {
         e.preventDefault();
-        var form = $(this).closest('form');
-        //todo: Ajax form submit, in laravel we need a token to submit the form
-        $.ajax({
-            url: form.attr('action'),
-            dataType: 'text/json',
-            type: 'POST',
-            data: {
-                format: 'json',
-                data: form.serializeArray()
-            },
-            error: function() {
-               console.log('error');
-            },
-            success: function(data) {
-               console.log(data);
-            }
-        });
+        searchTickets($(this));
     });
 
     $('#filghtsArrival, #flightsDeparture').on('input',function () {
         searchAirports($(this));
     });
 
-    $('#ajaxSearchFlights').on('click',function () {
-        searchFlights();
-    });
-
     $(document).on('click','.destination-result',function () {
         if($(this).parent().prev('input[type=text]')[0] == $('#filghtsArrival')[0]){
             $('#filghtsArrival').val($(this).attr('data-dest-airport'));
-            $('#destinationID').val($(this).attr('data-dest-code'));
+            $('#destinationCode').val($(this).attr('data-dest-code'));
         }else if($(this).parent().prev('input[type=text]')[0] == $('#flightsDeparture')[0]){
             $('#flightsDeparture').val($(this).attr('data-dest-airport'));
-            $('#deartureID').val($(this).attr('data-dest-code'));
+            $('#departureCode').val($(this).attr('data-dest-code'));
         }
         $('.ajax-select').hide();
     });
@@ -68,7 +48,7 @@ function searchAirports(element){
                 for(var i = 0; i < data.length; i++){
                     html +=
                         '<div class="destination-result" data-dest-airport="' + data[i]['airport'] + ' - ' + data[i]['city']
-                        + '" data-dest-code="' + data[i]['id'] + '">'
+                        + '" data-dest-code="' + data[i]['code'] + '">'
                         +'<p>'
                         + '<strong>' + data[i]['airport'] + '</strong> - '
                         + data[i]['code']
@@ -82,29 +62,68 @@ function searchAirports(element){
                 console.log('error');
             }
         });
+    }else if(airport == ""){
+        $(element.attr('data-target')).val("");
     }
 }
 
-function searchFlights(){
-    var destinationCode = $('#destinationID').val();
+function searchTickets(element) {
+    var form = $(element).closest('form').get(0);
     var token = $('#fareFinderForm').find('input[name="_token"]').val();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': token
         }
     });
+
     $.ajax({
-        url: '/ajax/tickets/fare-finder',
+        url: form.action,
         dataType: 'json',
         type: 'POST',
         data: {
-            destination_code: destinationCode
+            format: 'json',
+            departure_code: form.departure_code.value,
+            destination_code: form.destination_code.value
         },
-        success: function (data) {
-            console.log('success');
+        success: function(data) {
+            if(typeof(data['result'] === "undefined") ) {
+                let htmlContent = "";
+                for(let i = 0; i < data['result'].length; i++){
+                   let row = data['result'][i];
+                    htmlContent +=
+                    '<tr>' +
+                        '<td scope="row">' + row['from_country'] + '</td>' +
+                        '<td scope="row">' + row['from_city'] + '</td>' +
+                        '<td scope="row">' + row['from_airport'] + '</td>' +
+                        '<td scope="row">' + row['to_country'] + '</td>' +
+                        '<td scope="row">' + row['to_city'] + '</td>' +
+                        '<td scope="row">' + row['to_airport'] + '</td>' +
+                        '<td scope="row">' + row['date'] + '</td>' +
+                        '<td scope="row">' + row['length'] + '</td>' +
+                        '<td scope="row">' + row['price'] + '</td>' +
+                        '<td scope="row">' + row['company'] + '</td>' +
+                    '</tr>';
+                }
+
+                $('#flightsTable tbody').html(htmlContent);
+            }
+            displayAjaxMessage(data['app_message'], data['app_message_type']);
         },
-        error: function () {
+        error: function() {
             console.log('error');
         }
     });
+}
+
+function displayAjaxMessage(message, type = 'success'){
+    let htmlMessage =
+    '<div class="alert alert-dismissible fade show col-md-4 offset-md-4 alert-' + type + '" role="alert">'+
+        '<strong>' +
+            '<span>' + message + '</span>' +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '<span aria-hidden="true">×</span>' +
+            '</button>' +
+        '</strong>' +
+    '</div>';
+    $('#app > nav').next().prepend(htmlMessage);
 }

@@ -28,7 +28,7 @@ Route::get('/generate-wizzair', 'Front\TicketsController@generateWizzair')->name
 
 /*Ajax*/
 Route::get('/ajax/fligths/ganarate', 'Front\AjaxTicketsController@ajaxFlightGeneration')->name('ajax-fligths-generation');
-Route::post('/ajax/tickets/fare-finder', 'Front\TicketsController@ajaxFareFinder')->name('ajax-fare-finder');
+Route::post('/ajax/tickets/fare-finder', 'Front\AjaxTicketsController@ajaxFareFinder')->name('ajax-fare-finder');
 Route::post('/ajax/tickets/airport-finder', 'Front\TicketsController@ajaxAirportFinder')->name('ajax-airport-finder');
 Route::post('/ajax/my-cheap-tickets/add-cheap-ticket', 'Admin\UserTicketController@create')->name('add-cheap-ticket');
 /*/Ajax*/
